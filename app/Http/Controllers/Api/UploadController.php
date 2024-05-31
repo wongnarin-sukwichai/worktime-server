@@ -43,9 +43,13 @@ class UploadController extends Controller
         $image = $request->file('file');                                                 //ดึงไฟล์รูปภาพ 
         $image_name = uniqid() . '.png';                                            //uniqid() สุ่มชื่อใหม่ให้รูปภาพ / ถ้าเป็น blob ก็ตั้งนามสกุลไปให้มันได้เลย
 
-        $serv_path = "http://202.28.34.39:8081/storage/img/". $year . '/' . $month . '/'. $day;                                                 //สร้าง Path สำหรับ save file 
+        //$serv_path = "http://202.28.34.39:8081/storage/img/". $year . '/' . $month . '/'. $day;                                                 //สร้าง Path สำหรับ save file 
+        
+        //$chkPath = public_path($serv_path);                                             //public_path ตือ folder public
 
-        $chkPath = public_path($serv_path);                                             //public_path ตือ folder public
+        $serv_path = "app/public/img/". $year . '/' . $month . '/'. $day;
+
+        $chkPath = storage_path($serv_path);
 
         if (!File::exists($chkPath)) File::makeDirectory($chkPath, 0777, true);         //Check ว่ามี folder ไหม ถ้าไม่มีให้สร้าง folder ขึ้นมาใหม่
 

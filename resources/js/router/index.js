@@ -43,9 +43,9 @@ const routes = [
         path: "/home",
         name: "home",
         component: Home,
-        redirect: {
-            name: "dashboard",
-        },
+        // redirect: {
+        //     name: "dashboard",
+        // },
         meta: {
             guard: "auth",
         },

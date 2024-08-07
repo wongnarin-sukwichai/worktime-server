@@ -25,11 +25,8 @@
             </button>
         </div>
 
-        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8">
-            <div
-                class="inline-block min-w-full py-6 sm:px-6 lg:px-8"
-                ref="printRecord"
-            >
+        <div class="overflow-x-auto sm:-mx-6 lg:-mx-8" >
+            <div class="inline-block min-w-full py-6 sm:px-6 lg:px-8" ref="printRecord">
                 <div
                     class="flex justify-end text-lg text-gray-400 mb-4"
                     v-if="showDayList"
@@ -643,7 +640,7 @@ export default {
                 dat: "",
                 time: "08:30:00",
                 other: "",
-                code: "",
+                code: ""
             },
         };
     },
@@ -756,27 +753,29 @@ export default {
                 var imgData = canvas.toDataURL("image/png");
                 var imgWidth = 210;
                 var pageHeight = 290;
+                // var imgWidth = 280;
+                // var pageHeight = 300;
                 var imgHeight = (canvas.height * imgWidth) / canvas.width;
                 var heightLeft = imgHeight;
-                var doc = new jsPDF("P", "mm", "A4");
-                var position = 0; // give some top padding to first page
+                var doc = new jsPDF("l", "mm", "A4");
+                var position = 10; // give some top padding to first page
 
                 doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;
 
-                while (heightLeft >= 0) {
-                    position += heightLeft - imgHeight; // top padding for other pages
-                    doc.addPage();
-                    doc.addImage(
-                        imgData,
-                        "PNG",
-                        0,
-                        position,
-                        imgWidth,
-                        imgHeight
-                    );
-                    heightLeft -= pageHeight;
-                }
+                // while (heightLeft >= 0) {
+                //     position += heightLeft - imgHeight; // top padding for other pages
+                //     doc.addPage();
+                //     doc.addImage(
+                //         imgData,
+                //         "PNG",
+                //         0,
+                //         position,
+                //         imgWidth,
+                //         imgHeight
+                //     );
+                //     heightLeft -= pageHeight;
+                // }
                 doc.save("file.pdf");
             });
         },

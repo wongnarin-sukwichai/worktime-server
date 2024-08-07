@@ -2,10 +2,12 @@
     <div class="p-16 bg-gray-50">
         <div class="grid grid-cols-6 gap-2">
             <div
-                class="p-6 rounded-md bg-white bg-opacity-50 lg:w-60 border rounded-lg shadow-lg no-print"
+                class="p-6 bg-white bg-opacity-50 lg:w-60 border rounded-lg shadow-lg no-print"
             >
                 <nav class="space-y-4 text-sm text-gray-700">
-                    <div class="space-y-2">
+                    <div class="space-y-2"
+                    v-if="this.level() === 0"
+                    >
                         <h2
                             class="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
                         >
@@ -13,7 +15,7 @@
                         </h2>
                         <div class="flex flex-col space-y-2">
                             <router-link
-                                to="/home"
+                                to="/dashboard"
                                 class="flex p-2 rounded-lg hover:bg-gray-100 hover:text-gray-700"
                                 ><box-icon
                                     name="calendar-check"
@@ -115,7 +117,9 @@
                         </div>
                     </div>
 
-                    <div class="space-y-2">
+                    <div class="space-y-2"
+                    v-if="this.level() === 0"
+                    >
                         <h2
                             class="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
                         >
@@ -181,7 +185,6 @@
                     </div>
                 </nav>
             </div>
-
             <div
                 class="col-span-5 bg-white border rounded-md bg-opacity-50 shadow-lg"
             >
@@ -195,7 +198,8 @@
 import "boxicons";
 
 export default {
-    mounted() {},
+    mounted() {
+    },
     methods: {
         async logout() {
             await this.$store.dispatch("logout");
@@ -204,6 +208,10 @@ export default {
         link() {
             window.open("/pdf/tools.pdf", "_blank");
         },
+        level()
+        {
+            return this.$store.getters.getLevel;        
+        }
     },
 };
 </script>

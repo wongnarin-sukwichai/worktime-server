@@ -62,24 +62,24 @@ class ReportController extends Controller
                     $arr[$i]['timein'] = $j->timein;
                     $arr[$i]['otherin'] = $j->otherin;
 
-                    foreach ($cout as $k) {
+                    foreach ($cout as $j) {
 
-                        if ($r->uid == $k->uid) {
-                            $arr[$i]['idout'] = $k->id;
-                            $arr[$i]['picout'] = $k->pic;
-                            $arr[$i]['timeout'] = $k->timeout;
-                            $arr[$i]['otherout'] = $k->otherout;
+                        if ($r->uid == $j->uid) {
+                            $arr[$i]['idout'] = $j->id;
+                            $arr[$i]['picout'] = $j->pic;
+                            $arr[$i]['timeout'] = $j->timeout;
+                            $arr[$i]['otherout'] = $j->otherout;
                         }
                     }
                 } else {
 
-                    foreach ($cout as $k) {
+                    foreach ($cout as $j) {
 
-                        if ($r->uid == $k->uid) {
-                            $arr[$i]['idout'] = $k->id;
-                            $arr[$i]['picout'] = $k->pic;
-                            $arr[$i]['timeout'] = $k->timeout;
-                            $arr[$i]['otherout'] = $k->otherout;
+                        if ($r->uid == $j->uid) {
+                            $arr[$i]['idout'] = $j->id;
+                            $arr[$i]['picout'] = $j->pic;
+                            $arr[$i]['timeout'] = $j->timeout;
+                            $arr[$i]['otherout'] = $j->otherout;
                         }
                     }
                 }
@@ -247,57 +247,45 @@ class ReportController extends Controller
         $i = 0;
         $arr = [];
 
-        $member = Member::select('uid', 'name', 'surname', 'dep')
-            ->where('overtime', 1)
-            ->orderBy('dep', 'ASC')
-            ->get();
+        // $member = Member::select('uid', 'name', 'surname', 'dep')
+        //     ->where('overtime', 1)
+        //     ->orderBy('dep', 'ASC')
+        //     ->get();
 
         $cin = Otin::where('dat', $request['selected'])->get();
         $cout = Otout::where('dat', $request['selected'])->get();
 
-        foreach ($member as $r) {
+        foreach ($cin as $r) {
+            $arr[$i]['idin'] = $r->id;
             $arr[$i]['uid'] = $r->uid;
+            $arr[$i]['picin'] = $r->pic;
             $arr[$i]['name'] = $r->name;
             $arr[$i]['surname'] = $r->surname;
-            $arr[$i]['dep'] = $r->dep;
+            $arr[$i]['local'] = $r->local;
             $arr[$i]['dat'] = $request['selected'];
             $arr[$i]['d'] = $d;
             $arr[$i]['m'] = $m;
             $arr[$i]['y'] = $y;
+            $arr[$i]['timein'] = $r->timein;
+            $arr[$i]['otherin'] = $r->otherin;
 
-            foreach ($cin as $j) {
-
-                if ($r->uid == $j->uid) {
-                    $arr[$i]['idin'] = $j->id;
-                    $arr[$i]['picin'] = $j->pic;
-                    $arr[$i]['timein'] = $j->timein;
-                    $arr[$i]['otherin'] = $j->otherin;
-
-                    foreach ($cout as $k) {
-
-                        if ($r->uid == $k->uid) {
-                            $arr[$i]['idout'] = $k->id;
-                            $arr[$i]['picout'] = $k->pic;
-                            $arr[$i]['timeout'] = $k->timeout;
-                            $arr[$i]['otherout'] = $k->otherout;
-                        }
-                    }
-                } else {
-
-                    foreach ($cout as $k) {
-
-                        if ($r->uid == $k->uid) {
-                            $arr[$i]['idout'] = $k->id;
-                            $arr[$i]['picout'] = $k->pic;
-                            $arr[$i]['timeout'] = $k->timeout;
-                            $arr[$i]['otherout'] = $k->otherout;
-                        }
-                    }
-                }
+            if($r->otherin == 'บรรณารักษ์') {
+                $arr[0]['head'] = $r->name . ' ' . $r->surname;
             }
 
+            foreach ($cout as $j) {
+
+                if ($r->uid == $j->uid) {
+                    $arr[$i]['idout'] = $j->id;
+                    $arr[$i]['picout'] = $j->pic;
+                    $arr[$i]['timeout'] = $j->timeout;
+                    $arr[$i]['otherout'] = $j->otherout;                
+                }
+            }
             $i++;
         }
+
+        // $arr[0]['count'] = $i;
 
         return response()->json($arr);
     }

@@ -18,7 +18,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('surname');
             $table->string('email')->nullable();
+            $table->integer('level')->comment('1=admin, 2=adminOT, 3=normal');
             $table->string('password')->nullable();
+            $table->integer('level')->comment('0=ทั้งหมด, 1=เฉพาะ OT');
             $table->string('created_by');
             $table->rememberToken();
             $table->timestamps();

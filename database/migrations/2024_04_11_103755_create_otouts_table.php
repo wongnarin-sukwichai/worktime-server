@@ -23,7 +23,7 @@ return new class extends Migration
             $table->string('m');
             $table->string('y');
             $table->string('timeout');
-            $table->string('otherout')->nullable();
+            $table->string('otherout')->nullable()->comment('รายงานสถานการณ์');;
             $table->string('created')->nullable()->comment('กรณี admin เพิ่มข้อมูลเข้าระบบ');
             $table->timestamps();
         });

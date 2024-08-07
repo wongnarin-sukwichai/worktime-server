@@ -14,7 +14,7 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $data = Member::select('id', 'uid', 'name', 'surname', 'dep', 'overtime')->get();
+        $data = Member::select('id', 'uid', 'name', 'surname', 'dep', 'overtime', 'created_at')->get();
         return response()->json($data);
     }
 

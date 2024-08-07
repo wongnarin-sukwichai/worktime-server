@@ -25,6 +25,9 @@ export default {
         getRules(state) {
             return state.user.system;
         },
+        getLevel(state) {
+            return state.user.level;
+        }
     },
     mutations: {
         //mutaion รับค่าจาก action ผ่านคำสั่ง commit แล้วนำมาเปลี่ยนแปลงข้อมูลใน state (ด้านบน)
@@ -76,6 +79,7 @@ export default {
             await axios
                 .get("/api/user")
                 .then((response) => {
+                    // console.log(response)
                     commit("setUser", response.data); //commit คำสั่งเปลี่ยนแปลงข้อมูลใน mutation จากตัวอย่างหมายถึง mutaion function ชื่อ setUser (เลื่อนขึ้นไปดูข้างบน)
                 })
                 .catch((err) => {

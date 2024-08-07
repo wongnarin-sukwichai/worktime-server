@@ -77,7 +77,13 @@ export default {
         async login() {
             try {
                 await this.$store.dispatch("login", this.auth); //dispatch ส่งค่าไปยัง store ของ vuex
-                this.$router.push({ name: "home" }); //หากสำเร็จให้เปิด router ชื่อ home แบบ SPA
+                // this.$router.push({ name: "home" }); //หากสำเร็จให้เปิด router ชื่อ home แบบ SPA
+                let res = this.$store.getters.getLevel
+                if(res === 0) {
+                    this.$router.push({ name: "dashboard" });
+                } else {
+                    this.$router.push({ name: "otdashboard" });
+                }
             } catch (err) {
                 Swal.fire({
                     icon: "error",

@@ -26,17 +26,23 @@
         </div>
 
         <div class="overflow-x-auto sm:-mx-6 lg:-mx-8" ref="printRecord">
+            <div class="text-center text-lg">
+                <p>บัญชีลงเวลาการปฏิบัติงานนอกเวลาราชการ</p>
+                <p>สำนักวิทยบริการ มหาวิทยาลัยมหาสารคาม</p>
+                <p>วันที่ {{ moment().add(543, "years").format("LL") }}</p>
+            </div>
+
             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
                 <div
-                    class="flex justify-left text-lg text-gray-400 mb-4"
+                    class="flex justify-end text-sm text-gray-400"
                     v-if="showDayList"
                 >
-                    Print from the Worktime System Academic Resource Center MSU
+                    ** Print from the Worktime System Academic Resource Center MSU
                     |
                     {{ moment().add(543, "years").format("LLL") }} น.
                 </div>
 
-                <div class="overflow-hidden">
+                <div class="overflow-hidden mt-2">
                     <table
                         class="min-w-full border text-center text-sm font-light"
                     >
@@ -50,7 +56,7 @@
                                     <tr>
                                         <th
                                             scope="col"
-                                            class="border-r py-2 font-normal"
+                                            class="border-r py-2 px-2 font-normal"
                                         >
                                             #
                                         </th>
@@ -64,7 +70,7 @@
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
-                                            วันที่
+                                            บริการ
                                         </th>
                                         <th
                                             scope="col"
@@ -76,19 +82,13 @@
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
-                                            เวลาเข้า
+                                            เวลามา
                                         </th>
                                         <th
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
-                                            สถานะ
-                                        </th>
-                                        <th
-                                            scope="col"
-                                            class="border-r py-2 font-normal"
-                                        >
-                                            หมายเหตุ
+                                            ลงลายมือชื่อ
                                         </th>
                                         <th
                                             scope="col"
@@ -100,7 +100,19 @@
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
-                                            เวลาออก
+                                            เวลากลับ
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="border-r py-2 font-normal"
+                                        >
+                                            ลงลายมือชื่อ
+                                        </th>
+                                        <th
+                                            scope="col"
+                                            class="border-r py-2 font-normal"
+                                        >
+                                            จำนวนช.ม.
                                         </th>
                                         <th
                                             scope="col"
@@ -111,213 +123,187 @@
                                     </tr>
                                 </thead>
 
-                                <!-- กลุ่มงาน -->
-                                <thead
-                                    v-for="(dep, index) in depList"
+                                <!-- รายชื่อ -->
+                                <tr
+                                    class="border-b"
+                                    v-for="(report, index) in showDayList"
                                     :key="index"
                                 >
-                                    <tr>
-                                        <th
-                                            colspan="10"
-                                            class="border-b p-2 font-normal text-left bg-teal-500"
-                                        >
-                                            {{ dep.dep_title }}
-                                        </th>
-                                    </tr>
-
-                                    <!-- รายชื่อ -->
-                                    <tr
-                                        class="border-b"
-                                        v-for="(report, index) in showDayList"
-                                        :key="index"
+                                    <td class="whitespace-nowrap border-r py-2">
+                                        {{ index + 1 }}
+                                    </td>
+                                    <td class="whitespace-nowrap border-r py-2">
+                                        {{ report.name }}
+                                        {{ report.surname }}
+                                    </td>
+                                    <td class="whitespace-nowrap border-r py-2">
+                                        {{ report.otherin }}
+                                    </td>
+                                    <td
+                                        class="whitespace-nowrap border-r px-6 py-4"
                                     >
-                                        <template v-if="report.dep === dep.id">
-                                            <td
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                {{ index + 1 }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                {{ report.name }}
-                                                {{ report.surname }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                <!-- {{
-                                                    moment(report.dat).add(543, "years").format(
-                                                        "L"
-                                                    )
-                                                }} -->
-                                                {{
-                                                    moment(report.dat)
-                                                        .add(543, "years")
-                                                        .format("L")
-                                                }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap border-r px-6 py-4"
-                                            >
-                                                <img
-                                                    v-if="report.picin"
-                                                    class="mx-auto rounded-full object-cover object-center h-8 w-8 cursor-pointer"
-                                                    alt=""
-                                                    :src="
-                                                        path +
-                                                        '/' +
-                                                        report.y +
-                                                        '/' +
-                                                        report.m +
-                                                        '/' +
-                                                        report.d +
-                                                        '/' +
-                                                        report.picin
-                                                    "
-                                                    @click="
-                                                        showImg(
-                                                            report.y,
-                                                            report.m,
-                                                            report.d,
-                                                            report.picin
-                                                        )
-                                                    "
-                                                />
-                                            </td>
+                                        <img
+                                            v-if="report.picin"
+                                            class="mx-auto rounded-full object-cover object-center h-8 w-8 cursor-pointer"
+                                            alt=""
+                                            :src="
+                                                path +
+                                                '/' +
+                                                report.y +
+                                                '/' +
+                                                report.m +
+                                                '/' +
+                                                report.d +
+                                                '/' +
+                                                report.picin
+                                            "
+                                            @click="
+                                                showImg(
+                                                    report.y,
+                                                    report.m,
+                                                    report.d,
+                                                    report.picin
+                                                )
+                                            "
+                                        />
+                                    </td>
+                                    <td
+                                        v-if="report.timein"
+                                        class="whitespace-nowrap border-r py-2"
+                                    >
+                                        <a
+                                            class="hover:text-blue-500 hover:cursor-pointer"
+                                            @click="
+                                                editTime(
+                                                    report.idin,
+                                                    report.name,
+                                                    report.surname,
+                                                    report.dat,
+                                                    report.timein,
+                                                    report.otherin,
+                                                    '1'
+                                                )
+                                            "
+                                        >
+                                            {{ report.timein }}
+                                        </a>
+                                    </td>
+                                    <td
+                                        v-else
+                                        class="border-r hover:cursor-pointer hover:bg-sky-100"
+                                        @click="
+                                            addTime(
+                                                report.uid,
+                                                report.name,
+                                                report.surname,
+                                                report.dat,
+                                                '1'
+                                            )
+                                        "
+                                    ></td>
+                                    <td
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                    <td
+                                        class="whitespace-nowrap border-r px-6 py-4"
+                                    >
+                                        <img
+                                            v-if="report.picout"
+                                            class="mx-auto rounded-full object-cover object-center h-8 w-8 cursor-pointer"
+                                            alt=""
+                                            :src="
+                                                path +
+                                                '/' +
+                                                report.y +
+                                                '/' +
+                                                report.m +
+                                                '/' +
+                                                report.d +
+                                                '/' +
+                                                report.picout
+                                            "
+                                            @click="
+                                                showImg(
+                                                    report.y,
+                                                    report.m,
+                                                    report.d,
+                                                    report.picout
+                                                )
+                                            "
+                                        />
+                                    </td>
 
-                                            <td
-                                                v-if="report.timein"
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                <a
-                                                    class="hover:text-blue-500 hover:cursor-pointer"
-                                                    @click="
-                                                        editTime(
-                                                            report.idin,
-                                                            report.name,
-                                                            report.surname,
-                                                            report.dat,
-                                                            report.timein,
-                                                            report.otherin,
-                                                            '1'
-                                                        )
-                                                    "
-                                                >
-                                                    {{ report.timein }}
-                                                </a>
-                                            </td>
-                                            <td
-                                                v-else
-                                                class="border-r hover:cursor-pointer hover:bg-sky-100"
-                                                @click="
-                                                    addTime(
-                                                        report.uid,
-                                                        report.name,
-                                                        report.surname,
-                                                        report.dat,
-                                                        '1'
-                                                    )
-                                                "
-                                            ></td>
-                                            <td class="whitespace-nowrap border-r py-2"></td>
-                                            <!-- <td
-                                                class="whitespace-nowrap border-r py-2"
-                                                :class="
-                                                    report.timein > this.timer
-                                                        ? 'bg-red-300'
-                                                        : 'bg-gray-0'
-                                                "
-                                            >
-                                                <span
-                                                    class="text-white"
-                                                    v-if="
-                                                        report.timein >
-                                                        this.timer
-                                                    "
-                                                    >มาสาย</span
-                                                >
-                                            </td> -->
-                                            <td
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                {{ report.otherin }}
-                                            </td>
-                                            <td
-                                                class="whitespace-nowrap border-r px-6 py-4"
-                                            >
-                                                <img
-                                                    v-if="report.picout"
-                                                    class="mx-auto rounded-full object-cover object-center h-8 w-8 cursor-pointer"
-                                                    alt=""
-                                                    :src="
-                                                        path +
-                                                        '/' +
-                                                        report.y +
-                                                        '/' +
-                                                        report.m +
-                                                        '/' +
-                                                        report.d +
-                                                        '/' +
-                                                        report.picout
-                                                    "
-                                                    @click="
-                                                        showImg(
-                                                            report.y,
-                                                            report.m,
-                                                            report.d,
-                                                            report.picout
-                                                        )
-                                                    "
-                                                />
-                                            </td>
-
-                                            <td
-                                                v-if="report.timeout"
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                <a
-                                                    class="hover:text-blue-500 hover:cursor-pointer"
-                                                    @click.prevent="
-                                                        editTime(
-                                                            report.idout,
-                                                            report.name,
-                                                            report.surname,
-                                                            report.dat,
-                                                            report.timeout,
-                                                            report.otherout,
-                                                            '2'
-                                                        )
-                                                    "
-                                                >
-                                                    {{ report.timeout }}
-                                                </a>
-                                            </td>
-                                            <td
-                                                v-else
-                                                class="border-r hover:cursor-pointer hover:bg-sky-100"
-                                                @click="
-                                                    addTime(
-                                                        report.uid,
-                                                        report.name,
-                                                        report.surname,
-                                                        report.dat,
-                                                        '2'
-                                                    )
-                                                "
-                                            ></td>
-                                            <td
-                                                class="whitespace-nowrap border-r py-2"
-                                            >
-                                                {{ report.otherout }}
-                                            </td>
-                                        </template>
-                                    </tr>
-                                </thead>
+                                    <td
+                                        v-if="report.timeout"
+                                        class="whitespace-nowrap border-r py-2"
+                                    >
+                                        <a
+                                            class="hover:text-blue-500 hover:cursor-pointer"
+                                            @click.prevent="
+                                                editTime(
+                                                    report.idout,
+                                                    report.name,
+                                                    report.surname,
+                                                    report.dat,
+                                                    report.timeout,
+                                                    report.otherout,
+                                                    '2'
+                                                )
+                                            "
+                                        >
+                                            {{ report.timeout }}
+                                        </a>
+                                    </td>
+                                    <td
+                                        v-else
+                                        class="border-r hover:cursor-pointer hover:bg-sky-100"
+                                        @click="
+                                            addTime(
+                                                report.uid,
+                                                report.name,
+                                                report.surname,
+                                                report.dat,
+                                                '2'
+                                            )
+                                        "
+                                    ></td>
+                                    <td
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                    <td
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                    <td class="whitespace-nowrap py-2">
+                                        {{ report.otherout }}
+                                    </td>
+                                </tr>
+                                <tr
+                                v-for="n in 3"
+                                :key="n"
+                                class="border-b"                       
+                                >
+                                    <td
+                                    v-for="m in 10"
+                                    :key="m"
+                                    class="whitespace-nowrap border-r py-6"
+                                    ></td>
+                                    <td class="whitespace-nowrap py-3"></td>
+                                </tr>
                             </tbody>
                         </transition-group>
                     </table>
                 </div>
+                <div class="flex mt-8">
+            <!-- <p>มาปฏิบัติงานทั้งหมด <font class="px-6">{{ this.count }}</font> คน</p> -->
+            <p>มาปฏิบัติงานทั้งหมด ........................... คน</p>
+            <p class="pl-8">ไปราชการ ........................... คน</p>
+            <p class="pl-8">ไม่มาปฏิบัติงาน ........................... คน</p>
+        </div>
+
+        <div class="mt-12 text-center">
+            <p>ลงชื่อ .............................................................. ผู้ควบคุม</p>
+            <p>( {{ this.head }} )</p>
+        </div>
             </div>
         </div>
     </div>
@@ -605,8 +591,8 @@ import { jsPDF } from "jspdf";
 import Swal from "sweetalert2";
 
 export default {
-    mounted() {
-        this.search();
+    async mounted() {
+        await this.search();
         this.getDep();
         // this.getTimer();
     },
@@ -641,8 +627,11 @@ export default {
                 dat: "",
                 time: "08:30:00",
                 other: "",
-                code: ""
+                code: "",
             },
+            // count: "",
+            head: ""
+            
         };
     },
     methods: {
@@ -654,8 +643,10 @@ export default {
             try {
                 await this.$store.dispatch("reportDayOt", this.report);
                 this.showDayList = this.$store.getters.reportDay;
+                // this.count = this.showDayList[0]['count'];
+                this.head = this.showDayList[0]['head'];
             } catch (err) {
-                console.log(err);
+                // console.log(err);
             }
         },
         getDep() {
@@ -665,7 +656,7 @@ export default {
                     this.depList = response.data;
                 })
                 .catch((err) => {
-                    console.log(err);
+                    // console.log(err);
                 });
         },
         // getTimer() {
@@ -758,8 +749,8 @@ export default {
                 var pageHeight = 300;
                 var imgHeight = (canvas.height * imgWidth) / canvas.width;
                 var heightLeft = imgHeight;
-                var doc = new jsPDF("p", "mm", "A4");
-                var position = 0; // give some top padding to first page
+                var doc = new jsPDF("l", "mm", "A4");
+                var position = 10; // give some top padding to first page
 
                 doc.addImage(imgData, "PNG", 0, position, imgWidth, imgHeight);
                 heightLeft -= pageHeight;

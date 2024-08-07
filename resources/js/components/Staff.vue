@@ -144,18 +144,14 @@
                                                 class="whitespace-nowrap border-r py-2"
                                             >
                                                 {{
-                                                    moment(report.created_at)
-                                                        .add(543, "years")
-                                                        .format("L")
+                                                    moment(report.created_at).add(543, "years").format("L")
                                                 }}
                                             </td>
                                             <td
                                                 class="whitespace-nowrap border-r py-2"
                                             >
                                                 {{
-                                                    moment(
-                                                        report.created_at
-                                                    ).format("LTS")
+                                                    moment(report.created_at).format("LTS")
                                                 }}
                                                 น.
                                             </td>

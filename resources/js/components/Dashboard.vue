@@ -138,7 +138,7 @@
                                             <td
                                                 class="whitespace-nowrap border-r py-2"
                                             >
-                                                {{ index + 1 }}
+                                                {{ index }}
                                             </td>
                                             <td
                                                 class="whitespace-nowrap border-r py-2"

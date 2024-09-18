@@ -54,12 +54,12 @@
                                         >
                                             เมื่อวันที่
                                         </th>
-                                        <th
+                                        <!-- <th
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
                                             เวลา
-                                        </th>
+                                        </th> -->
                                     </tr>
                                 </thead>
 
@@ -147,14 +147,14 @@
                                                     moment(report.created_at).add(543, "years").format("L")
                                                 }}
                                             </td>
-                                            <td
+                                            <!-- <td
                                                 class="whitespace-nowrap border-r py-2"
                                             >
                                                 {{
                                                     moment(report.created_at).format("LTS")
                                                 }}
                                                 น.
-                                            </td>
+                                            </td> -->
                                         </template>
                                     </tr>
                                 </thead>

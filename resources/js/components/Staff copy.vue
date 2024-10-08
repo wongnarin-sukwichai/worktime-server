@@ -36,12 +36,12 @@
                                         >
                                             ชื่อ-นามสกุล
                                         </th>
-                                        <!-- <th
+                                        <th
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
                                             Overtime
-                                        </th> -->
+                                        </th>
                                         <th
                                             scope="col"
                                             class="border-r py-2 font-normal"
@@ -116,7 +116,7 @@
                                                 {{ report.name }}
                                                 {{ report.surname }}
                                             </td>
-                                            <!-- <td
+                                            <td
                                                 class="whitespace-nowrap border-r py-2"
                                                 v-if="report.overtime === 1"
                                             >
@@ -134,7 +134,7 @@
                                                 class="whitespace-nowrap border-r py-2 hover:cursor-pointer hover:bg-sky-50"
                                                 v-else
                                                 @click="sendUpdate(report.id)"
-                                            ></td> -->
+                                            ></td>
                                             <td
                                                 class="whitespace-nowrap border-r py-2"
                                             >
@@ -283,7 +283,7 @@
                                 </div>
                             </div>
 
-                            <!-- <div class="sm:flex sm:items-start">
+                            <div class="sm:flex sm:items-start">
                                 <div
                                     class="text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
                                 >
@@ -310,7 +310,7 @@
                                         </select>
                                     </div>
                                 </div>
-                            </div> -->
+                            </div>
                         </div>
 
                         <div
@@ -367,7 +367,7 @@ export default {
                 name: "",
                 surname: "",
                 dep: "",
-                //type: "",
+                type: "",
             },
             dep_name: "",
         };

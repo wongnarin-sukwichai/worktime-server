@@ -6,7 +6,7 @@
             >
                 <nav class="space-y-4 text-sm text-gray-700">
                     <div class="space-y-2"
-                    v-if="this.level() === 0"
+                    v-if="level === 0"
                     >
                         <h2
                             class="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
@@ -118,7 +118,7 @@
                     </div>
 
                     <div class="space-y-2"
-                    v-if="this.level() === 0"
+                    v-if="level === 0"
                     >
                         <h2
                             class="text-lg font-semibold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-600"
@@ -198,7 +198,11 @@
 import "boxicons";
 
 export default {
-    mounted() {
+    mounted() {},
+    date() {
+        return {
+            level: ""
+        }
     },
     methods: {
         async logout() {
@@ -208,10 +212,11 @@ export default {
         link() {
             window.open("/pdf/tools.pdf", "_blank");
         },
-        level()
-        {
-            return this.$store.getters.getLevel;        
-        }
     },
+    computed: {
+        level() {
+            return this.$store.getters.getLevel;
+        }
+    }
 };
 </script>

@@ -180,11 +180,12 @@
                                                     editIn(report.idin)
                                                 "
                                             > -->
-                                                {{ report.timein }}
+                                            {{ report.timein }}
                                             <!-- </a> -->
                                         </td>
                                         <td
-                                            class="whitespace-nowrap border-r px-6 py-2"></td>
+                                            class="whitespace-nowrap border-r px-6 py-2"
+                                        ></td>
                                         <!-- <td
                                             class="whitespace-nowrap border-r px-6 py-2"
                                             :class="
@@ -201,11 +202,19 @@
                                                 >มาสาย</span
                                             >
                                         </td> -->
+
                                         <td
                                             class="whitespace-nowrap border-r px-6 py-2"
+                                            v-if="report.otherin"
                                         >
-                                            {{ report.otherin }}
+                                            {{ showService(report.otherin) }}
                                         </td>
+                                        <td
+                                            class="whitespace-nowrap border-r px-6 py-2"
+                                            v-else
+                                        >
+                                        </td>
+
                                         <td
                                             class="whitespace-nowrap border-r px-6 py-2"
                                         >
@@ -235,7 +244,7 @@
                                                     editOut(report.idout)
                                                 "
                                             > -->
-                                                {{ report.timeout }}
+                                            {{ report.timeout }}
                                             <!-- </a> -->
                                         </td>
                                         <td
@@ -262,7 +271,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 
 export default {
-    mounted() {
+    async mounted() {
+        await this.getService();
         this.getMember();
         // this.getTimer();
     },
@@ -281,6 +291,7 @@ export default {
             memberList: "",
             moment: moment,
             timer: "",
+            serviceList: "",
         };
     },
     methods: {
@@ -299,6 +310,7 @@ export default {
                 try {
                     await this.$store.dispatch("reportOtMember", this.report);
                     this.showMemberList = this.$store.getters.reportMember;
+                    // console.log(this.showMemberList)
                 } catch (err) {
                     console.log(err);
                 }
@@ -309,10 +321,28 @@ export default {
                 .get("/api/otMember")
                 .then((response) => {
                     this.memberList = response.data;
+                    // console.log(this.memberList);
                 })
                 .catch((err) => {
                     console.log(err);
                 });
+        },
+        getService() {
+            axios
+                .get("/api/service")
+                .then((response) => {
+                    this.serviceList = response.data;
+                    // console.log(this.serviceList);
+                })
+                .catch((err) => {
+                    // console.log(err);
+                });
+        },
+        showService(id) {
+            var res = this.serviceList.filter(
+                (selection) => selection["id"] == id
+            );
+            return res[0].title;
         },
         // getTimer() {
         //     axios

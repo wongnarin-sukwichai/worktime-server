@@ -161,12 +161,13 @@
                                                 <font v-if="record.type === 1"
                                                     >เข้างาน</font
                                                 >
-                                                <font v-else-if="record.type === 2"
+                                                <font
+                                                    v-else-if="
+                                                        record.type === 2
+                                                    "
                                                     >ออกงาน</font
                                                 >
-                                                <font v-else
-                                                    >เพิ่มข้อมูล</font
-                                                >
+                                                <font v-else>เพิ่มข้อมูล</font>
                                             </p>
                                         </td>
                                         <td
@@ -209,15 +210,16 @@
                             </tbody>
                         </transition-group>
                     </table>
-                    <div class="mt-4">
-                        <TailwindPagination
-                            :data="recordList"
-                            @pagination-change-page="getRecord"
-                        >
-                        </TailwindPagination>
-                    </div>
                 </div>
             </div>
+        </div>
+        <div class="mt-4 flex justify-end">                  <!-- limit ไม่ให้ paginate ยาวเกินไป-->
+            <TailwindPagination
+                :data="recordList"
+                :limit="4"
+                @pagination-change-page="getRecord"
+            >
+            </TailwindPagination>
         </div>
     </div>
 </template>

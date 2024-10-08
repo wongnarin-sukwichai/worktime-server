@@ -24,8 +24,8 @@ return new class extends Migration
             $table->integer('dep')->comment('กลุ่มงาน');
             $table->integer('pos')->nullable()->comment('นักคอม, บรรณาลักษณ์');
             $table->integer('rank')->nullable()->comment('ปฏิบัติการ, ชำนาญการ');
-            $table->string('type')->comment('พนักงาน, ลูกจ้าง');
-            $table->integer('stat')->comment('ทำงาน, ออก');
+            $table->string('type')->nullable()->comment('พนักงาน, ลูกจ้าง');
+            $table->integer('stat')->nullable()->comment('ทำงาน, ออก');
             $table->string('address')->nullable();
             $table->string('tel')->nullable();
             $table->string('email')->nullable();

@@ -145,14 +145,20 @@ class ReportController extends Controller
 
         for ($i; $i <= $total; $i++) {
 
+            if($i < 10) {
+                $k = sprintf("%02d", $i);
+            } else {
+                $k = $i;
+            }
+
             $arr[$i]['name'] = $member->name;
             $arr[$i]['surname'] = $member->surname;
-            $arr[$i]['dat'] = $y . '-' . $m . '-' . $i;
+            $arr[$i]['dat'] = $y . '-' . $m . '-' . $k;
             $arr[$i]['m'] = $m;
             $arr[$i]['y'] = $y;
 
             foreach ($cin as $r) {
-                if ($i == $r->d) {
+                if ($k == $r->d) {
                     $arr[$i]['idin'] = $r->id;
                     $arr[$i]['picin'] = $r->pic;
                     $arr[$i]['din'] = $r->d;
@@ -182,7 +188,6 @@ class ReportController extends Controller
                 }
             }
         }
-
         return response()->json($arr);
     }
 
@@ -252,7 +257,7 @@ class ReportController extends Controller
         //     ->orderBy('dep', 'ASC')
         //     ->get();
 
-        $cin = Otin::where('dat', $request['selected'])->get();
+        $cin = Otin::where('dat', $request['selected'])->orderBy('otherin', 'ASC')->get();
         $cout = Otout::where('dat', $request['selected'])->get();
 
         foreach ($cin as $r) {
@@ -269,7 +274,7 @@ class ReportController extends Controller
             $arr[$i]['timein'] = $r->timein;
             $arr[$i]['otherin'] = $r->otherin;
 
-            if($r->otherin == 'บรรณารักษ์') {
+            if($r->otherin == '1') {
                 $arr[0]['head'] = $r->name . ' ' . $r->surname;
             }
 
@@ -336,16 +341,23 @@ class ReportController extends Controller
             ->where('y', $y)
             ->get();
 
-        for ($i; $i <= $total; $i++) {
+        for ($i=1; $i <= $total; $i++) {
+
+            if($i < 10) {
+                $k = sprintf("%02d", $i);
+            } else {
+                $k = $i;
+            }
 
             $arr[$i]['name'] = $member->name;
             $arr[$i]['surname'] = $member->surname;
-            $arr[$i]['dat'] = $y . '-' . $m . '-' . $i;
+            $arr[$i]['dat'] = $y . '-' . $m . '-' . $k;
             $arr[$i]['m'] = $m;
             $arr[$i]['y'] = $y;
 
             foreach ($cin as $r) {
-                if ($i == $r->d) {
+
+                if ($k == $r->d) {
                     $arr[$i]['idin'] = $r->id;
                     $arr[$i]['picin'] = $r->pic;
                     $arr[$i]['din'] = $r->d;
@@ -375,7 +387,6 @@ class ReportController extends Controller
                 }
             }
         }
-
         return response()->json($arr);
     }
 }

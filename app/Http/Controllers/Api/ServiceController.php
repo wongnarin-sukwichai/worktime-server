@@ -5,17 +5,16 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
-use App\Models\Record;
-use App\Models\Otrecord;
+use App\Models\Service;
 
-class RecordController extends Controller
+class ServiceController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $data = Record::orderBy('id', 'DESC')->paginate(10);
+        $data = Service::all();
 
         return response()->json($data);
     }
@@ -67,11 +66,4 @@ class RecordController extends Controller
     {
         //
     }
-
-    public function otRecord()
-    {
-        $data = Otrecord::orderBy('id', 'DESC')->paginate(10);
-        return response()->json($data);
-    }
-
 }

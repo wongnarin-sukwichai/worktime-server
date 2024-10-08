@@ -137,8 +137,7 @@
                                         {{ report.surname }}
                                     </td>
                                     <td class="whitespace-nowrap border-r py-2">
-                                        <!-- {{ report.otherin }} -->
-                                        {{ showService(report.otherin) }}
+                                        {{ report.otherin }}
                                     </td>
                                     <td
                                         class="whitespace-nowrap border-r px-6 py-4"
@@ -281,7 +280,7 @@
                                 <tr
                                 v-for="n in 3"
                                 :key="n"
-                                class="border-b"                      
+                                class="border-b"                       
                                 >
                                     <td
                                     v-for="m in 10"
@@ -596,7 +595,7 @@ export default {
         await this.search();
         this.getDep();
         // this.getTimer();
-        await this.getService();
+        this.getService();
     },
     data() {
         return {
@@ -661,14 +660,7 @@ export default {
                 .catch((err) => {
                     // console.log(err);
                 });
-        },
-        showService(id) {
-            var res = this.serviceList.filter(
-                (selection) => selection["id"] == id
-            );
-
-            return res[0].title;
-        },
+        }, 
         getDep() {
             axios
                 .get("/api/dep")

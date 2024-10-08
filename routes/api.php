@@ -14,6 +14,7 @@ use App\Http\Controllers\Api\TimerController;
 
 use App\Http\Controllers\Api\AddOtController;
 use App\Http\Controllers\Api\EditOtController;
+use App\Http\Controllers\Api\ServiceController;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,4 +59,5 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::resource('addOt', AddOtController::class);
     Route::resource('editOt', EditOtController::class);
     Route::post('reportOtMember', [ReportController::class, 'reportOtMember']);
+    Route::resource('service', ServiceController::class);
 });

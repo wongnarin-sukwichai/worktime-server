@@ -14,13 +14,13 @@ class MemberController extends Controller
      */
     public function index()
     {
-        $data = Member::select('uid', 'name', 'surname', 'dep', 'overtime', 'created_by', 'created_at')->get();
+        $data = Member::select('uid', 'name', 'surname', 'dep', 'created_by', 'created_at')->get();
         return response()->json($data);
     }
 
     public function otMember()
     {
-        $data = Member::where('overtime', 1)->select('uid', 'name', 'surname', 'dep')->get();
+        $data = Member::select('uid', 'name', 'surname', 'dep', 'created_by', 'created_at')->get();
         return response()->json($data);
     }
 
@@ -42,7 +42,6 @@ class MemberController extends Controller
             'name' => 'required',
             'surname' => 'required',
             'dep' => 'required',
-            'type' => 'required',
         ]);
 
         $data = new Member();
@@ -50,8 +49,6 @@ class MemberController extends Controller
         $data->name = $request['name'];
         $data->surname = $request['surname'];
         $data->dep = $request['dep'];
-        $data->type = $request['type'];
-        $data->stat = 1;
         $data->level = 0;
         $data->created_by = Auth::user()->name . ' ' . Auth::user()->surname;
 

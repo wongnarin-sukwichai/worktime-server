@@ -18,6 +18,12 @@
 
         <div class="flex justify-end" v-if="showDayList">
             <button
+                class="px-4 pt-1 border shadow-lg rounded-lg bg-green-200 hover:bg-slate-300 mr-2"
+                @click="addTime()"
+            >
+                <box-icon name="user-plus"></box-icon>
+            </button>
+            <button
                 class="px-4 pt-1 border shadow-lg rounded-lg bg-slate-200 hover:bg-slate-300"
                 @click.prevent="printReport()"
             >
@@ -29,7 +35,14 @@
             <div class="text-center text-lg">
                 <p>บัญชีลงเวลาการปฏิบัติงานนอกเวลาราชการ</p>
                 <p>สำนักวิทยบริการ มหาวิทยาลัยมหาสารคาม</p>
-                <p>วันที่ {{ moment().subtract(1, "days").add(543, "years").format("LL") }}</p>
+                <p>
+                    วันที่
+                    {{
+                        moment(this.report.selected)
+                            .add(543, "years")
+                            .format("LL")
+                    }}
+                </p>
             </div>
 
             <div class="inline-block min-w-full py-2 sm:px-6 lg:px-8">
@@ -37,8 +50,8 @@
                     class="flex justify-end text-sm text-gray-400"
                     v-if="showDayList"
                 >
-                    ** Print from the Worktime System Academic Resource Center MSU
-                    |
+                    ** Print from the libwork System by Academic Resource Center
+                    MSU |
                     {{ moment().add(543, "years").format("LLL") }} น.
                 </div>
 
@@ -82,7 +95,7 @@
                                             scope="col"
                                             class="border-r py-2 font-normal"
                                         >
-                                            เวลามา
+                                            เวลาเข้า
                                         </th>
                                         <th
                                             scope="col"
@@ -172,36 +185,8 @@
                                         v-if="report.timein"
                                         class="whitespace-nowrap border-r py-2"
                                     >
-                                        <a
-                                            class="hover:text-blue-500 hover:cursor-pointer"
-                                            @click="
-                                                editTime(
-                                                    report.idin,
-                                                    report.name,
-                                                    report.surname,
-                                                    report.dat,
-                                                    report.timein,
-                                                    report.otherin,
-                                                    '1'
-                                                )
-                                            "
-                                        >
-                                            {{ report.timein }}
-                                        </a>
+                                        {{ report.timein }}
                                     </td>
-                                    <td
-                                        v-else
-                                        class="border-r hover:cursor-pointer hover:bg-sky-100"
-                                        @click="
-                                            addTime(
-                                                report.uid,
-                                                report.name,
-                                                report.surname,
-                                                report.dat,
-                                                '1'
-                                            )
-                                        "
-                                    ></td>
                                     <td
                                         class="whitespace-nowrap border-r py-2"
                                     ></td>
@@ -238,55 +223,39 @@
                                         v-if="report.timeout"
                                         class="whitespace-nowrap border-r py-2"
                                     >
-                                        <a
-                                            class="hover:text-blue-500 hover:cursor-pointer"
-                                            @click.prevent="
-                                                editTime(
-                                                    report.idout,
-                                                    report.name,
-                                                    report.surname,
-                                                    report.dat,
-                                                    report.timeout,
-                                                    report.otherout,
-                                                    '2'
-                                                )
-                                            "
-                                        >
-                                            {{ report.timeout }}
-                                        </a>
+                                        {{ report.timeout }}
                                     </td>
                                     <td
-                                        v-else
-                                        class="border-r hover:cursor-pointer hover:bg-sky-100"
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                    <td
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                    <td
+                                        v-if="report.timeout"
+                                        class="whitespace-nowrap border-r py-2 hover:bg-sky-100 hover:cursor-pointer"
                                         @click="
-                                            addTime(
-                                                report.uid,
+                                            editOther(
+                                                report.idout,
                                                 report.name,
                                                 report.surname,
                                                 report.dat,
-                                                '2'
+                                                report.otherout
                                             )
                                         "
-                                    ></td>
-                                    <td
-                                        class="whitespace-nowrap border-r py-2"
-                                    ></td>
-                                    <td
-                                        class="whitespace-nowrap border-r py-2"
-                                    ></td>
-                                    <td class="whitespace-nowrap py-2">
+                                    >
                                         {{ report.otherout }}
                                     </td>
-                                </tr>
-                                <tr
-                                v-for="n in 3"
-                                :key="n"
-                                class="border-b"                      
-                                >
                                     <td
-                                    v-for="m in 10"
-                                    :key="m"
-                                    class="whitespace-nowrap border-r py-6"
+                                        v-else
+                                        class="whitespace-nowrap border-r py-2"
+                                    ></td>
+                                </tr>
+                                <tr v-for="n in 3" :key="n" class="border-b">
+                                    <td
+                                        v-for="m in 10"
+                                        :key="m"
+                                        class="whitespace-nowrap border-r py-6"
                                     ></td>
                                     <td class="whitespace-nowrap py-3"></td>
                                 </tr>
@@ -295,16 +264,22 @@
                     </table>
                 </div>
                 <div class="flex mt-8">
-            <!-- <p>มาปฏิบัติงานทั้งหมด <font class="px-6">{{ this.count }}</font> คน</p> -->
-            <p>มาปฏิบัติงานทั้งหมด ........................... คน</p>
-            <p class="pl-8">ไปราชการ ........................... คน</p>
-            <p class="pl-8">ไม่มาปฏิบัติงาน ........................... คน</p>
-        </div>
+                    <!-- <p>มาปฏิบัติงานทั้งหมด <font class="px-6">{{ this.count }}</font> คน</p> -->
+                    <p>มาปฏิบัติงานทั้งหมด ........................... คน</p>
+                    <p class="pl-8">ไปราชการ ........................... คน</p>
+                    <p class="pl-8">
+                        ไม่มาปฏิบัติงาน ........................... คน
+                    </p>
+                </div>
 
-        <div class="mt-12 text-center">
-            <p>ลงชื่อ .............................................................. ผู้ควบคุม</p>
-            <p>( {{ this.head }} )</p>
-        </div>
+                <div class="mt-12 text-center">
+                    <p>
+                        ลงชื่อ
+                        ..............................................................
+                        ผู้ควบคุม
+                    </p>
+                    <p>( {{ this.head }} )</p>
+                </div>
             </div>
         </div>
     </div>
@@ -378,9 +353,7 @@
                             </div>
                         </div>
 
-                        <div
-                            class="grid grid-cols-2 bg-white px-4 pb-4 sm:p-4 sm:pb-4"
-                        >
+                        <div class="bg-white px-4 pb-4 sm:p-4 sm:pb-4">
                             <div class="sm:flex sm:items-start">
                                 <div
                                     class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-amber-100 sm:mx-0 sm:h-10 sm:w-10"
@@ -393,30 +366,12 @@
                                     <label
                                         id="listbox-label"
                                         class="block text-sm font-medium leading-6 text-gray-900"
-                                        >เวลา :
-                                    </label>
-                                    <input
-                                        type="text"
-                                        class="form-control block w-full px-3 py-1.5 rounded-lg text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-sky-300 focus:outline-none"
-                                        placeholder="** 08:30:00 **"
-                                        required
-                                        v-model="editData.time"
-                                    />
-                                </div>
-                            </div>
-
-                            <div class="sm:flex sm:items-start">
-                                <div
-                                    class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
-                                >
-                                    <label
-                                        id="listbox-label"
-                                        class="block text-sm font-medium leading-6 text-gray-900"
                                         >หมายเหตุ :
                                     </label>
                                     <textarea
                                         class="border w-full rounded-lg p-2 focus:outline-none focus:ring-1 focus:border-blue-100"
-                                        v-model="editData.other"
+                                        required
+                                        v-model="editData.otherout"
                                     ></textarea>
                                 </div>
                             </div>
@@ -452,7 +407,7 @@
             aria-labelledby="modal-title"
             role="dialog"
             aria-modal="true"
-            v-show="modalAdd"
+            v-show="modalAddTimeIn"
         >
             <div
                 class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -487,7 +442,7 @@
                                         class="border-dotted border-2 rounded-lg p-2"
                                     >
                                         {{
-                                            moment(this.addData.dat)
+                                            moment(this.report.selected)
                                                 .add(543, "years")
                                                 .format("L")
                                         }}
@@ -507,8 +462,46 @@
                                     <div
                                         class="border-dotted border-2 rounded-lg p-2"
                                     >
-                                        {{ this.addData.name }}
-                                        {{ this.addData.surname }}
+                                        <button
+                                            type="button"
+                                            class="w-52 rounded-lg text-right"
+                                            @click="showSelect = !showSelect"
+                                        >
+                                            {{ this.myname }}
+                                            <box-icon
+                                                name="chevron-down"
+                                                size="xs"
+                                                class="hover:cursor-pointer"
+                                            ></box-icon>
+
+                                            <transition
+                                                name="fade"
+                                                mode="out-in"
+                                            >
+                                                <ul
+                                                    class="rounded-lg mt-4 p-2 overflow-hidden w-52 -mx-2 bg-white"
+                                                    v-if="showSelect"
+                                                >
+                                                    <li
+                                                        class="hover:bg-sky-400 hover:text-white rounded-lg"
+                                                        v-for="(
+                                                            member, index
+                                                        ) in memberList"
+                                                        :key="index"
+                                                        @click="
+                                                            choose(
+                                                                member.uid,
+                                                                member.name,
+                                                                member.surname
+                                                            )
+                                                        "
+                                                    >
+                                                        {{ member.name }}
+                                                        {{ member.surname }}
+                                                    </li>
+                                                </ul>
+                                            </transition>
+                                        </button>
                                     </div>
                                 </div>
                             </div>
@@ -523,40 +516,183 @@
                                 >
                                     <box-icon name="time"></box-icon>
                                 </div>
-                                <div
-                                    class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
-                                >
-                                    <label
-                                        id="listbox-label"
-                                        class="block text-sm font-medium leading-6 text-gray-900"
-                                        >เวลา :
-                                    </label>
-                                    <input
-                                        type="text"
-                                        class="form-control block w-full px-3 py-1.5 rounded-lg text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-sky-300 focus:outline-none"
-                                        placeholder="** 08:30:00 **"
-                                        required
-                                        v-model="addData.time"
-                                    />
-                                </div>
+
+                                <fieldset class="">
+                                    <div
+                                        class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left border p-1 rounded-lg border-dashed border-lime-500"
+                                    >
+                                        <input
+                                            type="radio"
+                                            value="1"
+                                            class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                            aria-labelledby="country-option-1"
+                                            aria-describedby="country-option-1"
+                                            v-model="this.addData.code"
+                                        />
+                                        <label
+                                            class="text-md font-medium text-gray-900 ml-2"
+                                        >
+                                            เวลาเข้า
+                                        </label>
+                                    </div>
+
+                                    <div
+                                        class="mt-3 text-center sm:mt-2 sm:ml-4 sm:text-left border p-1 rounded-lg border-dashed border-amber-500"
+                                    >
+                                        <input
+                                            type="radio"
+                                            value="2"
+                                            class="h-4 w-4 border-gray-300 focus:ring-2 focus:ring-blue-300 cursor-pointer"
+                                            aria-labelledby="country-option-2"
+                                            aria-describedby="country-option-2"
+                                            v-model="this.addData.code"
+                                        />
+                                        <label
+                                            class="text-md font-medium text-gray-900 ml-2"
+                                        >
+                                            เวลาออก
+                                        </label>
+                                    </div>
+                                </fieldset>
                             </div>
 
                             <div class="sm:flex sm:items-start">
-                                <div
-                                    class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
-                                >
-                                    <label
-                                        id="listbox-label"
-                                        class="block text-sm font-medium leading-6 text-gray-900"
-                                        >หมายเหตุ :
-                                    </label>
-                                    <textarea
-                                        class="border w-full rounded-lg p-2 focus:outline-none focus:ring-1 focus:border-blue-100"
-                                        v-model="addData.other"
-                                    ></textarea>
-                                </div>
+                                <transition name="fade" mode="out-in">
+                                    <div
+                                        v-if="this.addData.code === '1'"
+                                        class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                                    >
+                                        <label
+                                            id="listbox-label"
+                                            class="block text-sm font-medium leading-6 text-gray-900"
+                                            >เวลาเข้า :
+                                        </label>
+                                        <input
+                                            type="text"
+                                            class="form-control block w-full px-3 py-1.5 rounded-lg text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-sky-300 focus:outline-none"
+                                            placeholder="** 16:30:00 **"
+                                            v-model="addData.timein"
+                                        />
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                                    >
+                                        <label
+                                            id="listbox-label"
+                                            class="block text-sm font-medium leading-6 text-gray-900"
+                                            >เวลากลับ :
+                                        </label>
+                                        <input
+                                            type="text"
+                                            class="form-control block w-full px-3 py-1.5 rounded-lg text-gray-700 bg-white bg-clip-padding border border-solid border-gray-300 transition ease-in-out m-0 focus:text-gray-700 focus:bg-white focus:border-sky-300 focus:outline-none"
+                                            placeholder="** 20:00:00 **"
+                                            v-model="addData.timeout"
+                                        />
+                                    </div>
+                                </transition>
                             </div>
                         </div>
+
+                        <div
+                            class="bg-white px-4 pb-4 sm:p-4 sm:pb-4"
+                            :class="
+                                this.addData.code === '1'
+                                    ? 'grid grid-cols-2'
+                                    : ''
+                            "
+                        >
+                            <div class="sm:flex sm:items-start">
+                                <div
+                                    class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-lime-100 sm:mx-0 sm:h-10 sm:w-10"
+                                >
+                                    <box-icon
+                                        name="message-square-dots"
+                                    ></box-icon>
+                                </div>
+                                <transition name="fade" mode="out-in">
+                                    <div
+                                        v-if="this.addData.code === '1'"
+                                        class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                                    >
+                                        <label
+                                            id="listbox-label"
+                                            class="block text-sm font-medium leading-6 text-gray-900"
+                                            >จุดให้บริการ :
+                                        </label>
+                                        <div
+                                            class="border-dotted border-2 rounded-lg p-2"
+                                        >
+                                            <button
+                                                type="button"
+                                                class="w-40 rounded-lg text-right"
+                                                @click="
+                                                    serviceShow = !serviceShow
+                                                "
+                                            >
+                                                {{ this.myservice }}
+                                                <box-icon
+                                                    name="chevron-down"
+                                                    size="xs"
+                                                    class="hover:cursor-pointer"
+                                                ></box-icon>
+
+                                                <transition
+                                                    name="fade"
+                                                    mode="out-in"
+                                                >
+                                                    <ul
+                                                        class="rounded-lg mt-4 p-2 overflow-hidden w-40 -mx-2 bg-white"
+                                                        v-if="serviceShow"
+                                                    >
+                                                        <li
+                                                            class="hover:bg-sky-400 hover:text-white rounded-lg"
+                                                            v-for="(
+                                                                service, index
+                                                            ) in serviceList"
+                                                            :key="index"
+                                                            @click="
+                                                                chooseService(
+                                                                    service.id,
+                                                                    service.title
+                                                                )
+                                                            "
+                                                        >
+                                                            {{ service.title }}
+                                                        </li>
+                                                    </ul>
+                                                </transition>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        v-else
+                                        class="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left w-full"
+                                    >
+                                        <label
+                                            id="listbox-label"
+                                            class="block text-sm font-medium leading-6 text-gray-900"
+                                            >หมายเหตุ :
+                                        </label>
+                                        <textarea
+                                            class="border w-full rounded-lg p-2 focus:outline-none focus:ring-1 focus:border-blue-100"
+                                            v-model="addData.otherout"
+                                        ></textarea>
+                                    </div>
+                                </transition>
+                            </div>
+                        </div>
+
+                        <transition name="fade" mode="out-in">
+                            <div
+                                v-if="showAlert"
+                                class="text-red-400 text-center mb-2"
+                            >
+                                ** กรุณากรอกข้อมูลให้ครบถ้วน **
+                            </div>
+                        </transition>
 
                         <div
                             class="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6"
@@ -570,7 +706,7 @@
                             <button
                                 type="button"
                                 class="mt-3 inline-flex w-full justify-center rounded-md bg-white px-3 py-2 text-sm text-gray-900 shadow-sm hover:bg-gray-50 ring-1 ring-inset ring-gray-300 sm:mt-0 sm:w-auto"
-                                @click="closeAdd()"
+                                @click="close()"
                             >
                                 ออก
                             </button>
@@ -597,6 +733,7 @@ export default {
         this.getDep();
         // this.getTimer();
         await this.getService();
+        this.getMember();
     },
     data() {
         return {
@@ -605,7 +742,7 @@ export default {
             picked: new Date(),
             show: true,
             modalEdit: false,
-            modalAdd: false,
+            modalAddTimeIn: false,
             report: {
                 selected: "",
             },
@@ -618,36 +755,41 @@ export default {
                 name: "",
                 surname: "",
                 dat: "",
-                time: "",
-                other: "",
-                code: "",
+                otherout: "",
             },
             addData: {
+                code: "",
                 uid: "",
                 name: "",
                 surname: "",
                 dat: "",
-                time: "08:30:00",
-                other: "",
-                code: "",
+                timein: "",
+                otherin: "",
+                timeout: "",
+                otherout: "",
             },
             // count: "",
             head: "",
-            serviceList: ""
-            
+            serviceList: "",
+            memberList: "",
+            showSelect: false,
+            myname: "",
+            serviceShow: false,
+            myservice: "",
+            showAlert: false,
         };
     },
     methods: {
         async search() {
             this.report.selected = moment(this.picked)
-                .subtract(1, "days")
+                // .subtract(1, "days")
                 .format("YYYY-MM-DD");
             // console.log(this.selected)
             try {
                 await this.$store.dispatch("reportDayOt", this.report);
                 this.showDayList = this.$store.getters.reportDay;
                 // this.count = this.showDayList[0]['count'];
-                this.head = this.showDayList[0]['head'];
+                this.head = this.showDayList[0]["head"];
             } catch (err) {
                 // console.log(err);
             }
@@ -679,24 +821,23 @@ export default {
                     // console.log(err);
                 });
         },
-        // getTimer() {
-        //     axios
-        //         .get("/api/timer")
-        //         .then((response) => {
-        //             this.timer = response.data.timein;
-        //         })
-        //         .catch((err) => {
-        //             console.log(err);
-        //         });
-        // },
-        editTime(id, name, surname, dat, time, other, code) {
+        getMember() {
+            axios
+                .get("/api/otMember")
+                .then((response) => {
+                    this.memberList = response.data;
+                    // console.log(this.memberList);
+                })
+                .catch((err) => {
+                    console.log(err);
+                });
+        },
+        editOther(id, name, surname, dat, otherout) {
             this.editData.id = id;
             this.editData.name = name;
             this.editData.surname = surname;
             this.editData.dat = dat;
-            this.editData.time = time;
-            this.editData.other = other;
-            this.editData.code = code;
+            this.editData.otherout = otherout;
 
             this.modalEdit = true;
         },
@@ -725,38 +866,47 @@ export default {
                 console.log(err);
             }
         },
-        addTime(id, name, surname, dat, code) {
-            this.addData.uid = id;
-            this.addData.name = name;
-            this.addData.surname = surname;
-            this.addData.dat = dat;
-            this.addData.code = code;
-
-            this.modalAdd = true;
+        addTime() {
+            this.modalAddTimeIn = true;
         },
-        closeAdd() {
-            this.modalAdd = false;
+        close() {
+            this.modalAddTimeIn = false;
         },
         async sendAdd() {
-            try {
-                axios
-                    .post("/api/addOt", this.addData)
-                    .then((response) => {
-                        Swal.fire({
-                            position: "top-end",
-                            icon: "success",
-                            title: response.data.message,
-                            showConfirmButton: false,
-                            timer: 1500,
+            this.showAlert = false;
+            this.addData.dat = this.report.selected;
+
+            if (this.addData.uid == "" || this.addData.code == "") {
+                this.showAlert = true;
+            } else if (this.addData.code == "1" && this.addData.timein == "") {
+                this.showAlert = true;
+            } else if (this.addData.code == "1" && this.addData.otherin == "") {
+                this.showAlert = true;
+            } else if (this.addData.code == "2" && this.addData.timeout == "") {
+                this.showAlert = true;
+            } else if (this.addData.code == "2" && this.addData.otherout == "") {
+                this.showAlert = true;
+            } else {
+                try {
+                    axios
+                        .post("/api/addOt", this.addData)
+                        .then((response) => {
+                            Swal.fire({
+                                position: "top-end",
+                                icon: "success",
+                                title: response.data.message,
+                                showConfirmButton: false,
+                                timer: 1500,
+                            });
+                            this.modalAddTimeIn = false;
+                            this.search();
+                        })
+                        .catch((err) => {
+                            console.log(err);
                         });
-                        this.modalAdd = false;
-                        this.search();
-                    })
-                    .catch((err) => {
-                        console.log(err);
-                    });
-            } catch (err) {
-                console.log(err);
+                } catch (err) {
+                    console.log(err);
+                }
             }
         },
         async printReport() {
@@ -797,9 +947,26 @@ export default {
                 "_blank"
             );
         },
+        choose(id, name, surname) {
+            this.addData.uid = id;
+            this.addData.name = name;
+            this.addData.surname = surname;
+            this.myname = name + " " + surname;
+        },
+        chooseService(id, title) {
+            this.addData.otherin = id;
+            this.myservice = title;
+        },
     },
     components: {
         Datepicker,
+
+        myname() {
+            return this.myname;
+        },
+        myservice() {
+            return this.myservice;
+        },
     },
 };
 </script>

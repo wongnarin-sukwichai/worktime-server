@@ -155,7 +155,9 @@
                                                         ? 'text-sky-500'
                                                         : record.type === 2
                                                         ? 'text-orange-400'
+                                                        ? record.type === 3
                                                         : 'text-green-600'
+                                                        : 'text-gray-600'
                                                 "
                                             >
                                                 <font v-if="record.type === 1"
@@ -167,7 +169,13 @@
                                                     "
                                                     >ออกงาน</font
                                                 >
-                                                <font v-else>เพิ่มข้อมูล</font>
+                                                <font
+                                                    v-else-if="
+                                                        record.type === 3
+                                                    "
+                                                    >เพิ่มข้อมูล</font
+                                                >
+                                                <font v-else>หมายเหตุ</font>
                                             </p>
                                         </td>
                                         <td

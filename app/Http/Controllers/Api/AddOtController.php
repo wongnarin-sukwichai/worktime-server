@@ -36,37 +36,48 @@ class AddOtController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'code' => 'required',
             'uid' => 'required',
             'name' => 'required',
             'surname' => 'required',
             'dat' => 'required',
-            'time' => 'required',
-            'code' => 'required'
         ]);
 
         if($request['code'] == 1) {
-            $data = new Otin();
-            $code = 'timein';
-            $result = 'otherin';
-        } else {
-            $data = new Otout();
-            $code = 'timeout';
-            $result = 'otherout';
-        }
+
+        $data = new Otin();
 
         $data->uid = $request['uid'];
         $data->name = $request['name'];
         $data->surname = $request['surname'];
-        $data->local = 'arec';
         $data->dat = $request['dat'];
         $data->d = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('d');
         $data->m = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('m');
         $data->y = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('Y');
-        $data->$code = $request['time'];
-        $data->$result = $request['other'];
+        $data->timein = $request['timein'];
+        $data->otherin = $request['otherin'];
         $data->created = Auth::user()->name . ' ' . Auth::user()->surname;
 
         $data->save();
+
+        } else { 
+
+        $result = new Otout();
+
+        $result->uid = $request['uid'];
+        $result->name = $request['name'];
+        $result->surname = $request['surname'];
+        $result->dat = $request['dat'];
+        $result->d = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('d');
+        $result->m = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('m');
+        $result->y = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('Y');
+        $result->timeout = $request['timeout'];
+        $result->otherout = $request['otherout'] . ' : ' . Auth::user()->name . ' ' . Auth::user()->surname;
+        $result->created = Auth::user()->name . ' ' . Auth::user()->surname;
+
+        $result->save();
+
+        }
 
         $res = new Otrecord();
 
@@ -75,13 +86,16 @@ class AddOtController extends Controller
         $res->uid = $request['uid'] ;
         $res->name = $request['name'];
         $res->surname = $request['surname'];
-        $res->local = 'arec';
         $res->dat = $request['dat'];
         $res->d = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('d');
         $res->m = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('m');
         $res->y = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('Y');
-        $res->timenew = $request['time'];
-        $res->other = $request['other'];
+        if($request['code'] == 1) {
+            $res->timenew = $request['timein'];
+        } else {
+            $res->timenew = $request['timeout'];
+        } 
+        $res->other = $request['otherout'] . ' : ' . Auth::user()->name . ' ' . Auth::user()->surname;
 
         $res->save();
 

@@ -58,29 +58,40 @@ class EditOtController extends Controller
      */
     public function update(Request $request, string $id)
     {
-
-        $data = Otout::find($request['id']);
-
-        $data->otherout = null;
-
-        $data->update();
         
-        $data->otherout = $request['otherout'] . ' : ' . Auth::user()->name . ' ' . Auth::user()->surname;
+        if ($request['code'] == 1) {
+            $data = Otin::find($request['id']);
+
+            $result = $data->timein;
+
+            $data->timein = $request['time'];
+            $data->otherin = $request['other'];
+        } else {
+            $data = Otout::find($request['id']);
+
+            $result = $data->timeout;
+
+            $data->timeout = $request['time'];
+            $data->otherout = $request['other'];
+        }
 
         $data->update();
 
         $res = new Otrecord();
         $res->ref_id = $request['id'];
-        $res->type = 4;
+        $res->type = $request['code'];
         $res->created_by = Auth::user()->name . ' ' . Auth::user()->surname;
         $res->uid = $data->uid;
         $res->name = $request['name'];
         $res->surname = $request['surname'];
+        $res->local = 'arec';
         $res->dat = $request['dat'];
         $res->d = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('d');
         $res->m = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('m');
         $res->y = Carbon::createFromFormat('Y-m-d', $request['dat'])->format('Y');
-        $res->other = $request['otherout'];
+        $res->timeold = $result;
+        $res->timenew = $request['time'];
+        $res->other = $request['other'];
 
         $res->save();
 
